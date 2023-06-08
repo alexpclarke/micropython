@@ -3,28 +3,29 @@
 /delete-node/ &slot2_partition;
 /delete-node/ &slot3_partition;
 /delete-node/ &storage_partition;
+/delete-node/ &boot_partition;
 
-// / {
-// 	fstab {
-// 		compatible = "zephyr,fstab";
+/ {
+	fstab {
+		compatible = "zephyr,fstab";
 
-// 		// https://docs.zephyrproject.org/latest/build/dts/api/bindings/fs/zephyr,fstab,littlefs.html
-// 		lfs1: lfs1 {
-// 			compatible = "zephyr,fstab,littlefs";
-// 			read-size = <16>;
-// 			prog-size = <16>;
-// 			cache-size = <64>;
-// 			lookahead-size = <32>;
-// 			block-cycles = <512>;
-// 			mount-point = "/lfs1";
-// 			partition = <&storage_partition>;
-// 			// automount;
-// 			// read-only;
-// 			// no-format;
-// 			// disk-access;
-//     };
-// 	};
-// };
+		// https://docs.zephyrproject.org/latest/build/dts/api/bindings/fs/zephyr,fstab,littlefs.html
+		lfs1: lfs1 {
+			compatible = "zephyr,fstab,littlefs";
+			read-size = <16>;
+			prog-size = <512>;
+			cache-size = <512>;
+			lookahead-size = <64>;
+			block-cycles = <512>;
+			mount-point = "/littlefs";
+			partition = <&storage_partition>;
+			automount;
+			// read-only;
+			// no-format;
+			// disk-access;
+    };
+	};
+};
 
 &flash0 {
 	partitions {
@@ -33,9 +34,9 @@
 		#size-cells = <1>;
 
 		// 320 KB 
-		slot0_partition: partition@8000 {
+		slot0_partition: partition@0 {
 			label = "image-0";
-			reg = <0x00008000 0x00050000>;
+			reg = <0x00000000 0x00050000>;
 		};
 
 		// 64 KB
@@ -44,13 +45,10 @@
 			reg = <0x00050000 0x00010000>;
 		};
 
+		// 246 KB
 		storage_partition: partition@60000 {
 			label = "storage";
-			// 246 KB
-			reg = <0x00050000 0x0003D800>;
-			
-			// 64 KB
-			// reg = <0x00050000 0x00010000>;
+			reg = <0x00060000 0x0003D800>;
 		};
 	};
 };
